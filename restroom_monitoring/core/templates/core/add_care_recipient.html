@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Care Recipient{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Add a New Care Recipient</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary w-100">Save Care Recipient</button>
+</form>
+<a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3 w-100">Back to Dashboard</a>
+{% endblock %}

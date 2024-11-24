@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Dynamic Data{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Add Dynamic Data for {{ care_recipient.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary w-100">Save Data</button>
+</form>
+<a href="{% url 'view_care_recipient' care_recipient.id %}" class="btn btn-secondary mt-3 w-100">Back to Dashboard</a>
+{% endblock %}

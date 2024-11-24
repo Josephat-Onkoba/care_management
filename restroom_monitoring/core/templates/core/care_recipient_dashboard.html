@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Care Recipient Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-center">{{ care_recipient.name }}'s Dashboard</h2>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <h5>Physiological Data</h5>
+        <ul>
+            <li>Age: {{ care_recipient.age }}</li>
+            <li>Gender: {{ care_recipient.gender }}</li>
+            <li>BMI: {{ care_recipient.bmi }}</li>
+            <li>Medical Conditions: {{ care_recipient.medical_conditions }}</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h5>Actions</h5>
+        <a href="{% url 'add_dynamic_data' care_recipient.id %}" class="btn btn-success w-100 mb-2">Add Dynamic Data</a>
+    </div>
+</div>
+
+<hr>
+<h5>Dynamic Data</h5>
+{% if dynamic_data %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Water Intake (ml)</th>
+                <th>Activity (steps)</th>
+                <th>Meal</th>
+                <th>Stress Level</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in dynamic_data %}
+                <tr>
+                    <td>{{ data.timestamp }}</td>
+                    <td>{{ data.water_intake_ml }}</td>
+                    <td>{{ data.physical_activity_steps }}</td>
+                    <td>{{ data.meal_type }} - {{ data.specific_meal }}</td>
+                    <td>{{ data.stress_level }}</td>
+                    <td>
+                        <!-- Future actions like editing or deleting -->
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No dynamic data added yet. Click the button above to add.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Welcome, {{ user.username }}</h2>
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <h4>Your Care Recipients</h4>
+    <a href="{% url 'add_care_recipient' %}" class="btn btn-success">+ Add Care Recipient</a>
+</div>
+<hr>
+{% if care_recipients %}
+    <div class="row">
+        {% for care_recipient in care_recipients %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ care_recipient.name }}</h5>
+                        <p class="card-text">Age: {{ care_recipient.age }} | Gender: {{ care_recipient.gender }}</p>
+                        <a href="{% url 'view_care_recipient' care_recipient.id %}" class="btn btn-primary w-100">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-center">No care recipients added yet. Click the button above to get started.</p>
+{% endif %}
+{% endblock %}
