@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import CareRecipient, DynamicData
 from .forms import CareRecipientForm, DynamicDataForm
 from django.contrib import messages
+from .prediction_service import get_next_visit_prediction
 
 # Caregiver Signup
 from django.contrib.auth.forms import UserCreationForm
@@ -41,11 +42,19 @@ def add_care_recipient(request):
 @login_required
 def view_care_recipient(request, id):
     care_recipient = get_object_or_404(CareRecipient, id=id, caregiver=request.user)
-    dynamic_data = care_recipient.dynamic_data.all()
-    return render(request, 'core/care_recipient_dashboard.html', {
+    dynamic_data = DynamicData.objects.filter(care_recipient=care_recipient).order_by('-timestamp')
+
+    # Get the next visit prediction
+    predicted_next_visit, prediction_error = get_next_visit_prediction(care_recipient)
+
+    context = {
         'care_recipient': care_recipient,
         'dynamic_data': dynamic_data,
-    })
+        'predicted_next_visit': predicted_next_visit,
+        'prediction_error': prediction_error,
+    }
+    return render(request, 'core/view_care_recipient.html', context)
+
 
 # Add Dynamic Data
 @login_required

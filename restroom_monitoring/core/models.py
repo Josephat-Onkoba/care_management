@@ -40,6 +40,7 @@ class DynamicData(models.Model):
     bladder_pressure = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     heart_rate_variability = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     body_temperature = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    predicted_next_visit_time = models.DateTimeField(null=True, blank=True)  # New field to store predicted timestamp
 
     def __str__(self):
         return f"Data for {self.care_recipient.name} at {self.timestamp}"
