@@ -14,3 +14,4 @@ class DynamicDataForm(forms.ModelForm):
             'medication_taken', 'temperature', 'humidity', 'stress_level', 'hours_since_last_visit',
             'duration_of_last_visit_seconds', 'bladder_pressure', 'heart_rate_variability', 'body_temperature'
         ]
+

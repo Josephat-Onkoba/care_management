@@ -4,6 +4,7 @@ from .models import CareRecipient, DynamicData
 from .forms import CareRecipientForm, DynamicDataForm
 from django.contrib import messages
 from .prediction_service import get_next_visit_prediction
+from .prediction_stream import stream_data_for_prediction  # Import the streaming function
 
 # Caregiver Signup
 from django.contrib.auth.forms import UserCreationForm
@@ -43,6 +44,8 @@ def add_care_recipient(request):
 def view_care_recipient(request, id):
     care_recipient = get_object_or_404(CareRecipient, id=id, caregiver=request.user)
     dynamic_data = DynamicData.objects.filter(care_recipient=care_recipient).order_by('-timestamp')
+    
+    stream_data_for_prediction(care_recipient.id)
 
     # Get the next visit prediction
     predicted_next_visit, prediction_error = get_next_visit_prediction(care_recipient)

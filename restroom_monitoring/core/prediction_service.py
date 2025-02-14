@@ -1,11 +1,19 @@
+# prediction_service.py
 from datetime import datetime, timedelta
 from .models import DynamicData
 from .prediction import prediction_model
-
+from .encoding_utils import encode_meal_type, encode_stress_level  # Import encoding functions
 
 def get_next_visit_prediction(care_recipient):
     """
     Fetches the latest dynamic data for a care recipient and predicts the next restroom visit time.
+
+    Args:
+        care_recipient (CareRecipient): The care recipient for whom to make the prediction.
+
+    Returns:
+        tuple: A tuple containing the predicted next visit time (datetime) and an error message (str).
+               If the prediction fails, the predicted time will be None, and the error message will describe the issue.
     """
     # Fetch the latest dynamic data for the given care recipient
     latest_data = DynamicData.objects.filter(care_recipient=care_recipient).order_by('-timestamp').first()
@@ -26,38 +34,20 @@ def get_next_visit_prediction(care_recipient):
         'heart_rate_variability': float(latest_data.heart_rate_variability) if latest_data.heart_rate_variability else 0.0,
         'body_temperature': float(latest_data.body_temperature) if latest_data.body_temperature else 0.0,
     }
-
-    # Encode categorical fields (convert to numeric values)
     features['meal_type'] = encode_meal_type(latest_data.meal_type)
     features['stress_level'] = encode_stress_level(latest_data.stress_level)
 
     # Make a prediction using the model
     try:
         predicted_time_seconds = prediction_model.predict_one(features)
-
         if predicted_time_seconds:
             current_time = datetime.now()
             predicted_next_visit_time = current_time + timedelta(seconds=predicted_time_seconds)
+            # Save the prediction to the database
+            latest_data.predicted_next_visit_time = predicted_next_visit_time
+            latest_data.save()
             return predicted_next_visit_time, None
-
         else:
             return None, "Prediction failed: Model returned no result."
-
     except Exception as e:
         return None, f"Prediction failed: {e}"
-
-
-def encode_meal_type(meal_type):
-    """
-    Encodes meal type into numerical values for the model.
-    """
-    meal_mapping = {'Breakfast': 1, 'Lunch': 2, 'Dinner': 3, 'Snack': 4}
-    return meal_mapping.get(meal_type, 0)  # Default to 0 if meal_type is None or invalid
-
-
-def encode_stress_level(stress_level):
-    """
-    Encodes stress level into numerical values for the model.
-    """
-    stress_mapping = {'low': 1, 'medium': 2, 'high': 3}
-    return stress_mapping.get(stress_level, 0)  # Default to 0 if stress_level is None or invalid
