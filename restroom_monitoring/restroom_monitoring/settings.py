@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-LOGOUT_REDIRECT_URL = '/login/',
+
 LOGIN_REDIRECT_URL = '/'
 
 

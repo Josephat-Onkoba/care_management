@@ -83,3 +83,9 @@ def add_dynamic_data(request, id):
         'care_recipient': care_recipient  # Adding this might be useful in the template
     }
     return render(request, 'core/add_dynamic_data.html', context)
+
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'core/logout.html') 
