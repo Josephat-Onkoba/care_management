@@ -7,16 +7,19 @@ from .prediction_service import get_next_visit_prediction
 from .prediction_stream import stream_data_for_prediction  # Import the streaming function
 
 # Caregiver Signup
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm  
+from django.contrib.auth import login
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save()
+            login(request, user)
+            return redirect('dashboard')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
+    
     return render(request, 'core/signup.html', {'form': form})
 
 # Dashboard
