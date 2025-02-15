@@ -27,7 +27,7 @@ class DynamicData(models.Model):
         ('Snack', 'Snack')
     ])
     specific_meal = models.CharField(max_length=255, blank=True, null=True)  # Specific meal details
-    medication_taken = models.TextField(blank=True, null=True)  # Medication details
+    medication_taken = models.CharField(max_length=255, blank=True, null=True)  # Medication details
     temperature = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     humidity = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stress_level = models.CharField(max_length=10, choices=[
@@ -40,6 +40,14 @@ class DynamicData(models.Model):
     bladder_pressure = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     heart_rate_variability = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     body_temperature = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    predicted_next_visit_time = models.DateTimeField(null=True, blank=True)  # New field to store predicted timestamp
 
     def __str__(self):
         return f"Data for {self.care_recipient.name} at {self.timestamp}"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

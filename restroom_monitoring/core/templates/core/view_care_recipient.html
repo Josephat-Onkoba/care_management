@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <!-- Care Recipient Details -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>Care Recipient Dashboard</h4>
+            </div>
+            <div class="card-body">
+                <h5><strong>Name:</strong> {{ care_recipient.name }}</h5>
+                <p><strong>Age:</strong> {{ care_recipient.age }}</p>
+                <p><strong>Gender:</strong> {{ care_recipient.gender }}</p>
+                <p><strong>BMI:</strong> {{ care_recipient.bmi }}</p>
+                <p><strong>Caregiver:</strong> {{ request.user }}</p>
+            </div>
+        </div>
+
+       <!-- Prediction Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5>Prediction for Next Restroom Visit</h5>
+            </div>
+            <div class="card-body">
+                {% if predicted_next_visit %}
+                    <h6>
+                        Predicted Next Visit Time: 
+                        <strong>{{ predicted_next_visit|date:"Y-m-d H:i:s" }}</strong>
+                    </h6>
+                    <p class="text-muted">This prediction is based on the latest dynamic data inputs.</p>
+                {% else %}
+                    <p class="text-danger">
+                        {{ prediction_error|default:"No prediction available. Please add dynamic data for this care recipient." }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Dynamic Data Entries Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5>Dynamic Data Entries</h5>
+            </div>
+            <div class="card-body">
+                {% if dynamic_data %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Water Intake (ml)</th>
+                                <th>Physical Activity (steps)</th>
+                                <th>Sleep Duration (hrs)</th>
+                                <th>Meal Type</th>
+                                <th>Stress Level</th>
+                                <th>Hours Since Last Visit</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in dynamic_data %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ data.water_intake_ml }}</td>
+                                    <td>{{ data.physical_activity_steps }}</td>
+                                    <td>{{ data.sleep_duration_hours }}</td>
+                                    <td>{{ data.get_meal_type_display }}</td>
+                                    <td>{{ data.get_stress_level_display }}</td>
+                                    <td>{{ data.hours_since_last_visit }}</td>
+                                    <td>{{ data.timestamp }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No dynamic data entries have been added yet for this care recipient.</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Add Dynamic Data Button -->
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'add_dynamic_data' care_recipient.id %}" class="btn btn-primary">
+                Add Dynamic Data
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
