@@ -10,15 +10,23 @@ from .utils.sms import send_sms
 # Caregiver Signup
 from .forms import CustomUserCreationForm  
 from django.contrib.auth import login
+from .forms import CustomUserCreationForm  
+from django.contrib.auth import login
 
 def signup(request):
     if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('dashboard')
+            user = form.save()
+            login(request, user)
+            return redirect('dashboard')
     else:
+        form = CustomUserCreationForm()
+    
         form = CustomUserCreationForm()
     
     return render(request, 'core/signup.html', {'form': form})
@@ -100,6 +108,11 @@ def add_dynamic_data(request, id):
     }
     return render(request, 'core/add_dynamic_data.html', context)
 
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'core/logout.html') 
 from django.contrib.auth import logout
 
 def logout_view(request):
