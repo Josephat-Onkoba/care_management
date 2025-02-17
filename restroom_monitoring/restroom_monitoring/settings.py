@@ -125,3 +125,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+AFRICASTALKING_USERNAME = 'josedevtrials'
+AFRICASTALKING_API_KEY = 'atsk_535324aaa546fa6466b49f10232485f7e26fd32c4eaa2cbbcc0c627f6c3446b132a09d18'

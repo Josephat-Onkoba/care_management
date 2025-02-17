@@ -45,7 +45,6 @@ def add_care_recipient(request):
 
 # View Care Recipient Dashboard
 @login_required
-@login_required
 def view_care_recipient(request, id):
     try:
         care_recipient = get_object_or_404(CareRecipient, id=id, caregiver=request.user)
